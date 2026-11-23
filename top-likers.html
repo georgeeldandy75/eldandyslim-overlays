@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOP LIKERS</title>
+<style>
+/* AJUSTA SOLO ESTA VARIABLE Y USA EL MISMO ANCHO EN STREAMLABS. */
+:root{--ancho-overlay:230px;--accent:#35DCE9;--text:#f5f8ff;--muted:#a3b1c6}
+*{box-sizing:border-box}html,body{width:var(--ancho-overlay);height:188px;padding:0;margin:0;background:transparent!important;overflow:hidden;font-family:Arial,Helvetica,sans-serif;color:var(--text)}
+.canvas{width:var(--ancho-overlay);height:188px;padding:5px 7px 7px}
+.panel{width:100%;height:175px;overflow:hidden;border-radius:13px;border:1px solid rgba(255,255,255,.20);background:linear-gradient(115deg,rgba(19,27,46,.96),rgba(9,14,28,.96));box-shadow:inset 0 0 0 1px rgba(255,255,255,.025)}
+.header{display:flex;align-items:center;gap:8px;height:40px;padding:0 11px;border-bottom:1px solid rgba(255,255,255,.09)}
+.icon{display:grid;place-items:center;width:25px;height:25px;border-radius:7px;background:color-mix(in srgb,var(--accent) 17%,transparent);border:1px solid var(--accent);color:var(--accent);font-size:18px;font-weight:900}
+.title{font-size:14px;letter-spacing:.6px;font-weight:900;white-space:nowrap}
+.rows{padding:5px 7px 6px;display:flex;flex-direction:column;gap:4px}
+.row{height:38px;display:flex;align-items:center;gap:8px;padding:0 7px;border:1px solid rgba(255,255,255,.07);border-radius:8px;background:rgba(255,255,255,.045);min-width:0}
+.place{width:22px;flex-shrink:0;text-align:center;font-size:18px}.username{min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:700;line-height:1.2}
+.score{flex-shrink:0;color:var(--accent);font-weight:800;font-size:12px;font-variant-numeric:tabular-nums}.score small{font-size:9px;color:var(--muted);font-weight:500}
+#live{display:none;width:100%;height:132px;border:0;background:transparent}
+/* El widget externo se renderiza internamente a mayor tamaño y luego se reduce. */
+</style></head><body>
+<div class="canvas"><main class="panel"><header class="header"><span class="icon" aria-hidden="true">♥</span><span class="title">TOP LIKERS</span></header><section id="demo" class="rows" aria-label="Vista de ejemplo"></section><iframe id="live" title="Ranking real de TikFinity" referrerpolicy="no-referrer"></iframe></main></div>
+<script>
+/* ===== CONFIGURACIÓN EDITABLE =====
+  modo: 'demo' muestra datos de ejemplo editables.
+  modo: 'iframe' intenta cargar la URL pública de un widget de TikFinity.
+  escalaTikfinity cambia solo el tamaño visual del contenido externo (0.3 a 1).
+  --ancho-overlay en :root determina el ancho de la caja.
+  En Streamlabs ajusta el ancho de la Fuente de navegador al mismo número.
+  IMPORTANTE: no todas las URLs admiten estar dentro de un iframe.
+  Si no carga, agrega el widget de TikFinity por separado en Streamlabs.
+  No pegues tokens secretos ni credenciales en un HTML compartido.
+*/
+const CONFIG = {
+  modo: 'iframe',
+  urlWidgetPublico: 'https://widgets.tikfinity.com/oKQMv6LaIL',
+  escalaTikfinity: 0.50, // 0.50 = 50%, 0.65 = 65%, 1 = tamaño original
+  usuarios: []
+
+};
+const demo=document.getElementById('demo');const frame=document.getElementById('live');
+if(CONFIG.modo==='iframe' && /^https:\/\//i.test(CONFIG.urlWidgetPublico)){
+  demo.style.display='none';
+  const escala=Math.max(0.3,Math.min(1,Number(CONFIG.escalaTikfinity)||0.65));
+  frame.style.display='block';
+  frame.style.transformOrigin='top left';
+  frame.style.transform=`scale(${escala})`;
+  frame.style.width=`${100/escala}%`;
+  frame.style.height=`${132/escala}px`;
+  frame.src=CONFIG.urlWidgetPublico;
+}else{
+ const medals=['🥇','🥈','🥉'];
+ (CONFIG.usuarios||[]).slice(0,3).forEach((u,i)=>{
+   const row=document.createElement('div');row.className='row';
+   const medal=document.createElement('span');medal.className='place';medal.textContent=medals[i];
+   const name=document.createElement('span');name.className='username';name.textContent=u.nombre||'—';name.title=u.nombre||'';
+   const val=document.createElement('span');val.className='score';
+   val.textContent=Number(u.puntos||0).toLocaleString('es-MX')+' ';
+   const unit=document.createElement('small');unit.textContent='likes';val.appendChild(unit);
+   row.append(medal,name,val);demo.appendChild(row);
+ });
+}
+</script></body></html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cintilla de noticias | eldandyslim</title>
+<style>
+  /* Lienzo TRANSPARENTE para Streamlabs: 1920 x 100 */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: transparent !important; }
+  body { font-family: Arial, Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }
+  .canvas { position: relative; width: 100%; height: 100%; display: flex; align-items: flex-end; padding: 8px 0 6px; overflow: hidden; }
+  .ticker { height: 72px; width: 100%; display: flex; position: relative; overflow: hidden; color: white; background: rgba(13, 17, 27, .95); border-top: 2px solid #4ce6ff; border-bottom: 2px solid #4ce6ff; box-shadow: 0 0 16px rgba(0, 214, 255, .24); }
+  .label { position: relative; flex: 0 0 auto; z-index: 2; display: flex; justify-content: center; align-items: center; padding: 0 25px; min-width: 215px; font-size: 29px; font-weight: 900; letter-spacing: 1px; white-space: nowrap; color: #fff; background: linear-gradient(115deg, #04a4df, #00739c); box-shadow: 7px 0 20px rgba(0,0,0,.35); }
+  .label::after { content: ''; position: absolute; right: -12px; width: 12px; height: 100%; background: #00739c; clip-path: polygon(0 0,100% 50%,0 100%); }
+  .ticker-window { flex: 1; min-width: 0; height: 100%; overflow: hidden; display: flex; align-items: center; }
+  .moving { display: flex; flex: 0 0 auto; width: max-content; align-items: center; height: 100%; will-change: transform; animation: scroll var(--duration, 55s) linear infinite; }
+  .group { display: flex; flex: 0 0 auto; align-items: center; white-space: nowrap; height: 100%; }
+  .entry { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 28px; height: 100%; padding-left: 38px; font-size: 29px; font-weight: 700; letter-spacing: .1px; white-space: nowrap; }
+  .separator { color: #34e2ff; font-weight: 900; font-size: 22px; }
+  @keyframes scroll { from { transform: translate3d(0,0,0); } to { transform: translate3d(calc(-1 * var(--distance, 1920px)),0,0); } }
+  @media (prefers-reduced-motion: reduce) { .moving { animation-play-state: running; } }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <div class="ticker" id="ticker">
+    <div class="label" id="label">EN VIVO</div>
+    <div class="ticker-window" id="window"><div class="moving" id="moving"><div class="group" id="group"></div></div></div>
+  </div>
+</div>
+<script>
+/* ======================================================================
+   ✏️ EDITA SOLO ESTA SECCIÓN Y GUARDA EL ARCHIVO (Ctrl + S).
+   Después, en Streamlabs, actualiza la Fuente de navegador.
+   Puedes agregar o quitar noticias separadas por comas y comillas.
+   ====================================================================== */
+const CONFIG = {
+  titulo: "BIENVENID@",                  // Etiqueta fija a la izquierda
+  mensajes: [
+    "¡Bienvenidos al directo de @eldandyslim!",
+    "Sígueme en TikTok, Instagram, Kick, Twitch, Facebook y YouTube: @eldandyslim",
+    "Gracias por estar aquí. Comparte el live y participa en el chat."
+  ],
+  velocidad: 135,                       // Píxeles/segundo: 80 lento, 135 normal, 200 rápido
+  fondo: "rgba(13, 17, 27, 0.95)",     // Negro oscuro; usa 'transparent' si lo prefieres
+  colorTexto: "#ffffff",
+  colorAcento: "#31dfff",              // Bordes y separadores
+  colorEtiqueta: "#008ec5",           // Fondo de la etiqueta fija
+  separador: "◆",                      // Símbolo entre noticias
+  mostrarEtiqueta: true                // false = ocultar la etiqueta
+};
+/* ===================== FIN DE CONFIGURACIÓN =========================== */
+(function init() {
+  const ticker = document.getElementById('ticker');
+  const label = document.getElementById('label');
+  const windowEl = document.getElementById('window');
+  const moving = document.getElementById('moving');
+  const group = document.getElementById('group');
+  label.textContent = CONFIG.titulo;
+  label.style.background = CONFIG.colorEtiqueta;
+  label.style.setProperty('--label', CONFIG.colorEtiqueta);
+  label.style.display = CONFIG.mostrarEtiqueta ? 'flex' : 'none';
+  ticker.style.background = CONFIG.fondo;
+  ticker.style.color = CONFIG.colorTexto;
+  ticker.style.borderColor = CONFIG.colorAcento;
+  const messages = (CONFIG.mensajes || []).map(s => String(s).trim()).filter(Boolean);
+  if (!messages.length) messages.push('Escribe tu primera noticia en CONFIG.mensajes');
+  const appendEntry = (str) => {
+    const el = document.createElement('span');
+    el.className = 'entry';
+    const msg = document.createElement('span');
+    msg.textContent = str; // Texto seguro, sin interpretar HTML
+    const sep = document.createElement('span');
+    sep.className = 'separator';
+    sep.style.color = CONFIG.colorAcento;
+    sep.textContent = CONFIG.separador;
+    el.append(msg, sep);
+    group.appendChild(el);
+  };
+  // El bloque repetido debe superar el ancho visible para evitar huecos negros.
+  const makeLoop = () => {
+    moving.style.animation = 'none';
+    while (moving.children.length > 1) moving.removeChild(moving.lastChild);
+    group.replaceChildren();
+    let pass = 0;
+    do {
+      for (const str of messages) appendEntry(str);
+      pass++;
+    } while (group.getBoundingClientRect().width < windowEl.clientWidth + 160 && pass < 30);
+    const width = Math.ceil(group.getBoundingClientRect().width);
+    moving.appendChild(group.cloneNode(true));
+    moving.style.setProperty('--distance', width + 'px');
+    moving.style.setProperty('--duration', (width / Math.max(20, Number(CONFIG.velocidad) || 135)).toFixed(2) + 's');
+    // Reinicia en el mismo punto visual; ambos grupos son idénticos.
+    void moving.offsetWidth;
+    moving.style.animation = '';
+  };
+  makeLoop();
+  window.addEventListener('resize', makeLoop);
+})();
+</script>
+</body>
+</html>

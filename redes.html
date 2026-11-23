@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>eldandyslim | Overlay deslizante compatible con Streamlabs</title>
+<style>
+:root{color-scheme:light}*{box-sizing:border-box}
+html,body{width:342px;height:116px;margin:0;padding:0;overflow:hidden;background:transparent!important}
+body{font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+.stage{position:relative;width:342px;height:116px;overflow:hidden;background:transparent;isolation:isolate}
+.pill{position:absolute;top:12px;left:13px;width:316px;height:92px;display:flex;align-items:center;overflow:hidden;
+ border:2px solid var(--accent);border-radius:23px;
+ background:linear-gradient(170deg,#2a2a31 0%,#0a0a10 46%,#050508 100%);
+ box-shadow:0 0 9px var(--glow),inset 0 1px rgba(255,255,255,.23),0 5px 10px rgba(0,0,0,.22);
+ opacity:0;transform:translateX(370px);animation:slideCycle 42s linear infinite;animation-delay:var(--delay);will-change:transform,opacity}
+.pill:before{content:"";pointer-events:none;position:absolute;left:9px;right:9px;top:3px;height:33px;border-radius:22px 22px 45px 45px;background:linear-gradient(to bottom,rgba(255,255,255,.10),transparent)}
+.logo{width:71px;flex:0 0 71px;display:flex;align-items:center;justify-content:center;height:100%}.logo svg{width:50px;height:50px;display:block;filter:drop-shadow(0 0 2px var(--glow))}
+.divider{flex:0 0 2px;width:2px;height:53px;background:linear-gradient(to bottom,transparent,#e9e9ef 20%,#e9e9ef 80%,transparent);margin-right:14px}
+.handle{flex:0 0 202px;width:202px;height:44px;display:block;overflow:visible;filter:drop-shadow(0 2px 3px rgba(0,0,0,.65))}
+.handle svg{display:block;width:202px;height:44px;overflow:visible}
+/* One 7s slot each: 0.9s entering, 6.1s holding, 0.9s exiting as next card enters.
+   At 42 seconds, the six cards repeat seamlessly. SVG text has a constrained width to avoid clipping in Streamlabs CEF. */
+@keyframes slideCycle{
+  0%{transform:translateX(370px);opacity:0}
+  2.142857%{transform:translateX(0);opacity:1}
+  16.666667%{transform:translateX(0);opacity:1}
+  18.809524%{transform:translateX(-370px);opacity:0}
+  18.81%{transform:translateX(-370px);opacity:0}
+  18.811%{transform:translateX(370px);opacity:0}
+  100%{transform:translateX(370px);opacity:0}
+}
+</style></head>
+<body><main class="stage" aria-label="Redes sociales de @eldandyslim">
+<!-- Six SVG cards slide in sequence, 7 seconds apart, with continuous 42-second looping. -->
+<div class="pill" style="--accent:#22ece5;--glow:#16bfc0a8;--delay:0s"><div class="logo"><svg viewBox="0 0 64 64" aria-label="TikTok"><path d="M38 7v28.3a12.3 12.3 0 1 1-11.8-12.2v9a4.2 4.2 0 1 0 3.7 4.2V7h8.1zm0 0c1.7 8.6 7.5 13.1 16.2 13.6v8.3c-7.2-.2-12.3-2.9-16.2-6.6" fill="none" stroke="#ff295d" stroke-width="7" stroke-linejoin="round" transform="translate(-2,2)"/><path d="M38 7v28.3a12.3 12.3 0 1 1-11.8-12.2v9a4.2 4.2 0 1 0 3.7 4.2V7h8.1zm0 0c1.7 8.6 7.5 13.1 16.2 13.6v8.3c-7.2-.2-12.3-2.9-16.2-6.6" fill="none" stroke="#26f4ee" stroke-width="7" stroke-linejoin="round" transform="translate(1,-1)"/><path d="M38 7v28.3a12.3 12.3 0 1 1-11.8-12.2v9a4.2 4.2 0 1 0 3.7 4.2V7h8.1zm0 0c1.7 8.6 7.5 13.1 16.2 13.6v8.3c-7.2-.2-12.3-2.9-16.2-6.6" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"/></svg></div><div class="divider"></div><div class="handle"><svg viewBox="0 0 202 44" role="img" aria-label="@eldandyslim" xmlns="http://www.w3.org/2000/svg"><text x="0" y="33" textLength="200" lengthAdjust="spacingAndGlyphs" fill="#ffffff" font-family="Arial,Helvetica,sans-serif" font-size="32" font-weight="800">@eldandyslim</text></svg></div></div>
+<div class="pill" style="--accent:#ed4cbb;--glow:#f4339a91;--delay:7s"><div class="logo"><svg viewBox="0 0 64 64" aria-label="Instagram"><defs><linearGradient id="ig" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#ffb400"/><stop offset=".45" stop-color="#fd285d"/><stop offset="1" stop-color="#9e42d4"/></linearGradient></defs><rect x="5" y="5" width="54" height="54" rx="15" fill="url(#ig)"/><rect x="14" y="14" width="36" height="36" rx="11" fill="none" stroke="white" stroke-width="5"/><circle cx="32" cy="32" r="9" fill="none" stroke="white" stroke-width="5"/><circle cx="46" cy="18" r="3.4" fill="white"/></svg></div><div class="divider"></div><div class="handle"><svg viewBox="0 0 202 44" role="img" aria-label="@eldandyslim" xmlns="http://www.w3.org/2000/svg"><text x="0" y="33" textLength="200" lengthAdjust="spacingAndGlyphs" fill="#ffffff" font-family="Arial,Helvetica,sans-serif" font-size="32" font-weight="800">@eldandyslim</text></svg></div></div>
+<div class="pill" style="--accent:#65f500;--glow:#65f50090;--delay:14s"><div class="logo"><svg viewBox="0 0 64 64" aria-label="Kick"><path fill="#65f500" d="M6 6h16v20h8V18h8V10h20v20H46v8h12v20H38V46h-8v-8h-8v20H6z"/></svg></div><div class="divider"></div><div class="handle"><svg viewBox="0 0 202 44" role="img" aria-label="@eldandyslim" xmlns="http://www.w3.org/2000/svg"><text x="0" y="33" textLength="200" lengthAdjust="spacingAndGlyphs" fill="#ffffff" font-family="Arial,Helvetica,sans-serif" font-size="32" font-weight="800">@eldandyslim</text></svg></div></div>
+<div class="pill" style="--accent:#a970ff;--glow:#a970ff9a;--delay:21s"><div class="logo"><svg viewBox="0 0 64 64" aria-label="Twitch"><path fill="#a970ff" d="M8 5h51v36L45 55H32l-9 9V55H8z"/><path fill="#fff" d="M14 11h39v28L43 49H29l-8 8v-8h-7z"/><path fill="#a970ff" d="M20 17h27v21l-7 7H27l-7 7V45h-4V17z"/><path stroke="#fff" stroke-width="6" d="M30 23v13m11-13v13"/></svg></div><div class="divider"></div><div class="handle"><svg viewBox="0 0 202 44" role="img" aria-label="@eldandyslim" xmlns="http://www.w3.org/2000/svg"><text x="0" y="33" textLength="200" lengthAdjust="spacingAndGlyphs" fill="#ffffff" font-family="Arial,Helvetica,sans-serif" font-size="32" font-weight="800">@eldandyslim</text></svg></div></div>
+<div class="pill" style="--accent:#1877f2;--glow:#1877f2a0;--delay:28s"><div class="logo"><svg viewBox="0 0 64 64" aria-label="Facebook"><circle cx="32" cy="32" r="30" fill="#1877f2"/><path fill="#fff" d="M37 59V36h8l1.3-10H37v-6c0-3 1-4.8 5-4.8h5V6.3A58 58 0 0 0 39 6c-9 0-14 5.4-14 15v5h-8v10h8v23z"/></svg></div><div class="divider"></div><div class="handle"><svg viewBox="0 0 202 44" role="img" aria-label="@eldandyslim" xmlns="http://www.w3.org/2000/svg"><text x="0" y="33" textLength="200" lengthAdjust="spacingAndGlyphs" fill="#ffffff" font-family="Arial,Helvetica,sans-serif" font-size="32" font-weight="800">@eldandyslim</text></svg></div></div>
+<div class="pill" style="--accent:#ff3131;--glow:#ff3131a0;--delay:35s"><div class="logo"><svg viewBox="0 0 64 64" aria-label="YouTube"><rect x="3" y="12" width="58" height="40" rx="12" fill="#ff2424"/><path fill="white" d="m27 22 18 10-18 10z"/></svg></div><div class="divider"></div><div class="handle"><svg viewBox="0 0 202 44" role="img" aria-label="@eldandyslim" xmlns="http://www.w3.org/2000/svg"><text x="0" y="33" textLength="200" lengthAdjust="spacingAndGlyphs" fill="#ffffff" font-family="Arial,Helvetica,sans-serif" font-size="32" font-weight="800">@eldandyslim</text></svg></div></div>
+</main></body></html>
